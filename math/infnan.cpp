@@ -4,6 +4,10 @@
 #include <math.h>
 
 namespace Math {
+#if __cplusplus <= 199711L
+#else
+  using std::isfinite;
+#endif
 
 int IsNaN(double x)
 {

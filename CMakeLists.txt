@@ -11,6 +11,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 SET (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
+SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 
 # COMPILER SETTINGS (default: Release) and flags
 INCLUDE(CompilerSettings)
