@@ -25,13 +25,18 @@ public:
     ControlInput u;
     std::vector<State> path;
     SmartPointer<EdgePlanner> e;
+    std::vector<State> reach;
+    std::vector<ControlInput> ureach;
   };
+  uint Nreach;
   typedef Graph::TreeNode<State,EdgeData> Node;
 
   KinodynamicTree(KinodynamicCSpace* s);
   ~KinodynamicTree();
+  void EnableReachableSet(uint Nreach_);
   void Init(const State& initialState);
   void Clear();
+  void AddReachableSet(Node* milestone);
   Node* AddMilestone(Node* parent,const ControlInput& u,const State& x);
   Node* AddMilestone(Node* parent,const ControlInput& u,const std::vector<State>& path,const SmartPointer<EdgePlanner>& e);
   void AddPath(Node* n0,const KinodynamicMilestonePath& path,std::vector<Node*>& res);
@@ -100,7 +105,7 @@ public:
   BidirectionalRRTKP(KinodynamicCSpace* s);
   virtual ~BidirectionalRRTKP() {}
   void Init(const State& xStart,const State& xGoal);
-  bool Plan(int maxIters);
+  virtual bool Plan(int maxIters);
   bool IsDone() const;
   void CreatePath(KinodynamicMilestonePath& path);
   Node* ExtendStart();
@@ -127,6 +132,48 @@ public:
   };
 
   Bridge bridge;
+};
+
+/** @brief A unidirectional RRT planner for kinodynamic systems.
+ */
+class UnidirectionalRRTKP: public BidirectionalRRTKP
+{
+public:
+
+  UnidirectionalRRTKP(KinodynamicCSpace* s);
+  virtual ~UnidirectionalRRTKP() {}
+  virtual bool Plan(int maxIters);
+  void CreatePath(KinodynamicMilestonePath& path) const;
+  Node* goalNode;
+};
+
+
+/** @brief Reachability-guided RRT ([Shkolnik et al.,2009])
+ */
+class RGRRT
+{
+public:
+  typedef KinodynamicTree::Node Node;
+
+  RGRRT(KinodynamicCSpace* s, uint Nreach=100);
+  virtual ~RGRRT() {}
+  virtual void Init(const State& xinit);
+  virtual Node* Plan(int maxIters);
+  virtual Node* Extend();
+  virtual Node* ExtendToward(const State& xdest);
+  virtual void PickDestination(State& xdest);
+  virtual void PickControl(const Node* x0, const State& xDest, ControlInput& u);
+
+  bool IsDone() const;
+  void CreatePath(KinodynamicMilestonePath& path) const;
+
+  KinodynamicCSpace* space;
+  Real goalSeekProbability;
+  CSpace* goalSet;
+  KinodynamicTree tree;
+
+  //temporary output
+  Node* goalNode;
 };
 
 #endif

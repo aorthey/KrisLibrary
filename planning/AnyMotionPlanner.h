@@ -2,6 +2,7 @@
 #define ANY_MOTION_PLANNER_H
 
 #include "MotionPlanner.h"
+#include "KinodynamicMotionPlanner.h"
 
 class TiXmlElement;
 

@@ -10,6 +10,58 @@ void KinodynamicMilestonePath::Clear()
   paths.clear();
 }
 
+bool KinodynamicMilestonePath::Save(ostream& out)
+{
+  //std::vector<State> milestones;
+  //  std::vector<ControlInput> controls;
+  //    std::vector<std::vector<State> > paths;
+  //      std::vector<SmartPointer<EdgePlanner> > edges;
+
+  out << milestones.size()<<endl;
+  for(uint i=0;i<milestones.size();i++) {
+    out << milestones.at(i)<<endl;
+  }
+  out << controls.size() << endl;
+  for(uint i = 0; i < controls.size(); i++){
+    out << controls.at(i)<<endl;
+  }
+  out << paths.size() << endl;
+  for(uint i=0;i<paths.size();i++) {
+    out << paths.at(i).size() << endl;
+    for(uint j = 0; j < paths.at(i).size(); j++){
+      out << paths.at(i).at(j) << endl;
+    }
+  }
+  //out << edges.size() << endl;
+  //for(uint j = 0; j < edges.size(); j++){
+  //  out << *edges.at(j) << endl;
+  //}
+    //out << edges.at(i) << endl;
+    //out<<times[i]<<"    "<<milestones[i]<<endl;
+  return true;
+}
+
+bool KinodynamicMilestonePath::Load(istream& in)
+{
+  milestones.clear();
+  controls.clear();
+  paths.clear();
+  edges.clear();
+  //Real t;
+  //Vector x;
+  //while(in) {
+  //  in >> t >> x;
+  //  if(in) {
+  //    times.push_back(t);
+  //    milestones.push_back(x);
+  //  }
+  //}
+  //if(in.bad()) {
+  //  return false;
+  //}
+  //return true;
+  return false;
+}
 void KinodynamicMilestonePath::SimulateFromControls(KinodynamicCSpace* space)
 {
   Assert(milestones.size()==controls.size()+1);

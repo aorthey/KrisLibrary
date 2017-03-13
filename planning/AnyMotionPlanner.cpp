@@ -443,6 +443,7 @@ class BiRRTInterface  : public MotionPlannerInterface
     if(n) return rrt.milestones.size()-1;
     else {
       fprintf(stderr,"BiRRTInterface::AddMilestone: Warning, milestone is infeasible?\n");
+      std::cout << q << std::endl;
       return -1;
     }
   }

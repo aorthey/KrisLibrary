@@ -1,6 +1,7 @@
 #ifndef KINODYNAMIC_PATH_H
 #define KINODYNAMIC_PATH_H
 
+#include <iostream>
 #include "EdgePlanner.h"
 class KinodynamicCSpace;
 typedef Vector State;
@@ -24,6 +25,8 @@ class KinodynamicMilestonePath
   inline int NumMilestones() const { return milestones.size(); }
   inline const Config& GetMilestone(int i) const { return milestones[i]; }
 
+  bool Save(std::ostream& out);
+  bool Load(std::istream& in);
   void Clear();
   void SimulateFromControls(KinodynamicCSpace* space);
   void Append(const ControlInput& u,KinodynamicCSpace* space);
