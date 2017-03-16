@@ -151,6 +151,26 @@ void KinodynamicTree::Reroot(Node* n)
   FatalError("TODO: KinodynamicTree::Reroot");
 }
 
+double KinodynamicTree::ComputeDistance(Node* nlhs, const State& xrhs) const
+{
+    double d=space->Distance(*nlhs, xrhs);
+
+    uint Nreach = nlhs->edgeFromParent().reach.size();
+    if(Nreach>0){
+      double localclosest = Inf;
+      for(uint j = 0; j < Nreach; j++){
+        double dreach = space->Distance(nlhs->edgeFromParent().reach.at(j),xrhs);
+        if(dreach<localclosest){
+          localclosest = dreach;
+        }
+      }
+      if(localclosest>=d){
+        //no progress towards x has been made by any member of reachable set of 
+        d = Inf;
+      }
+    }
+    return d;
+}
 Node* KinodynamicTree::FindClosest(const State& x) const
 {
   EZCallTrace tr("KinodynamicTree::FindClosest()");
@@ -163,25 +183,7 @@ Node* KinodynamicTree::FindClosest(const State& x) const
   double dclosest=Inf;
   for(size_t i=0;i<index.size();i++) {
 
-    double d=space->Distance(*index[i],x);
-    //std::cout << (*index[i]).size() << std::endl;
-
-    //uint Nreach = index[i]->edgeFromParent().reach.size();
-
-    if(Nreach>0){
-      double localclosest = Inf;
-      for(uint j = 0; j < Nreach; j++){
-        double dreach = space->Distance(index[i]->edgeFromParent().reach.at(j),x);
-        if(dreach<localclosest){
-          localclosest = dreach;
-        }
-      }
-      if(localclosest>=d){
-        //no progress towards x has been made by any member of reachable set of 
-        d = Inf;
-      }
-    }
-
+    double d = ComputeDistance(index.at(i), x);
     if(d < dclosest) {
       dclosest=d;
       closest=index[i];

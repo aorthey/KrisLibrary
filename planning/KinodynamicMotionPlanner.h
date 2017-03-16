@@ -34,6 +34,7 @@ public:
   KinodynamicTree(KinodynamicCSpace* s);
   ~KinodynamicTree();
   void EnableReachableSet(uint Nreach_);
+  double ComputeDistance(Node* nlhs, const State& xrhs) const;
   void Init(const State& initialState);
   void Clear();
   void AddReachableSet(Node* milestone);
