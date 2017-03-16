@@ -305,9 +305,17 @@ Node* RRTKinodynamicPlanner::Plan(int maxIters)
     goalNode = tree.root;
     return tree.root;
   }
+  std::cout << "RRT KinodynamicCSpace Planner Start..." << std::endl;
   for(int i=0;i<maxIters;i++) {
     Node* n=Extend();
-    //std::cout << "iteration " << i << "/" << maxIters << ":" << *n << std::endl;
+    if(n){
+      std::cout << "iteration " << i << "/" << maxIters << ":" << *n << '\r';
+    }else{
+      std::cout << "iteration " << i << "/" << maxIters << '\r';
+    }
+    //if(i%100==0){
+    //  std::cout << "iteration " << i << "/" << maxIters << ":" << '\r';
+    //}
     if(n && goalSet && goalSet->IsFeasible(*n)) {
       goalNode = n;
       return n;
@@ -357,7 +365,7 @@ Node* RRTKinodynamicPlanner::ExtendToward(const State& xdest)
   space->Simulate(*n,u,path);
   if(DEBUG) std::cout << "[RRT] New point "<< path.back() << std::endl;
   if(!space->IsFeasible(path.back())) {
-    printf("Edge endpoint is not feasible\n");
+    if(DEBUG) printf("Edge endpoint is not feasible\n");
     return NULL;
   }
   EdgePlanner* e=space->TrajectoryChecker(path);
