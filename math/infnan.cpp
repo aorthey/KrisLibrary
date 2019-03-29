@@ -49,7 +49,7 @@ int IsInf(double x)
   else if(cls == _FPCLASS_NINF) return -1;
   else return 0;
 #elif HAVE_DECL_ISINF
-  if(isinf(x)) {
+  if(std::isinf(x)) {
     if(x > 0) return 1;
     else return -1;
   }
@@ -73,7 +73,7 @@ int IsNaN(float x)
   return _isnan(x);
 #elif HAVE_DECL_ISNAN
   //return isnanf(x);
-  return isnan(x);
+  return std::isnan(x);
 #elif HAVE_IEEE_COMPARISONS
   return (x!=x?1:0);
 #else
@@ -108,7 +108,7 @@ int IsInf(float x)
   else return 0;
 #elif HAVE_DECL_ISINF
   //if(isinff(x)) {
-  if(isinf(x)) {
+  if(std::isinf(x)) {
     if(x > 0) return 1;
     else return -1;
   }
