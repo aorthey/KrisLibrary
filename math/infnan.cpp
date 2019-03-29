@@ -2,6 +2,7 @@
 #include "math.h"
 #include <stdio.h>
 #include <math.h>
+#include <cmath>
 
 namespace Math {
 #if __cplusplus <= 199711L
@@ -14,7 +15,7 @@ int IsNaN(double x)
 #ifdef _MSC_VER
   return _isnan(x);
 #elif HAVE_DECL_ISNAN
-  return isnan(x);
+  return std::isnan(x);
 #elif HAVE_IEEE_COMPARISONS
   return (x!=x?1:0);
 #else
